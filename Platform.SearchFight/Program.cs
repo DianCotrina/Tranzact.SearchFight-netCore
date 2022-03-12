@@ -20,6 +20,7 @@ namespace Platform.SearchFight
         static void Main(string[] args)
         {
             RunAsync(args).GetAwaiter().GetResult();
+            Console.WriteLine("\n");
         }
 
         private static async Task RunAsync(string[] args)
@@ -28,9 +29,8 @@ namespace Platform.SearchFight
             var searchFightProcessor = host.Services.GetRequiredService<SearchFightProcessor>();
 
             List<string> searchTopics = new List<string> { ".net", "python" };
-            IList<SearchWinner> searchResults = new List<SearchWinner>();
 
-            await searchFightProcessor.CallSearchFightService(searchTopics, searchResults);
+            await searchFightProcessor.CallSearchFightService(searchTopics);
             searchFightProcessor.Reports.ForEach(r => Console.WriteLine(r));
 
             Console.WriteLine("\n");
@@ -49,35 +49,16 @@ namespace Platform.SearchFight
             return Host.CreateDefaultBuilder(args)
                 .ConfigureServices((context, services) =>
                 {
-                    //services.AddSingleton(configuration);
-
-                    services.AddTransient<Program>();
-
+                    services.AddHttpClient();
                     services.AddTransient<SearchFightProcessor>();
                     services.AddTransient<IGroupListConverter, GroupListConverter>();
                     services.AddTransient<ISearchReportProcessor, SearchReportProcessor>();
-
-                    services.AddSingleton<GoogleSearchEngine>();
+                    services.AddTransient<IWinnerProcessor, WinnerProcessor>();
                     services.Configure<SearchGoogleConfig>(configuration.GetSection("GoogleSearchEngine"));
-
-                    services.AddSingleton<BingSearchEngine>();
                     services.Configure<SearchBingConfig>(configuration.GetSection("BingSearchEngine"));
-
-                    services.AddSingleton<ISearchTopicProcessor, SearchTopicProcessor>(container =>
-                    {
-                        var bingConsumer = container.GetRequiredService<BingSearchEngine>();
-                        var googleConsumer = container.GetRequiredService<GoogleSearchEngine>();
-
-                        return new SearchTopicProcessor(new ISearchEngine[]
-                        {
-                            bingConsumer,
-                            googleConsumer
-                        });
-                    });
-
-
-
-
+                    services.AddSingleton<ISearchEngine, GoogleSearchEngine>();
+                    services.AddSingleton<ISearchEngine, BingSearchEngine>();
+                    services.AddSingleton<ISearchTopicProcessor, SearchTopicProcessor>();
                 });
         }
 

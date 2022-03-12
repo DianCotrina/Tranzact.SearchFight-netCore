@@ -12,26 +12,28 @@ namespace Platform.SearchFight.Service.Engine
 {
     public class GoogleSearchEngine : ISearchEngine
     {
-        private readonly HttpClient _client;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly SearchGoogleConfig _configuration;
 
-        public GoogleSearchEngine(IOptions<SearchGoogleConfig> configuration)
+        public GoogleSearchEngine(IOptions<SearchGoogleConfig> configuration, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration.Value;
-            _client = new HttpClient();
+            _httpClientFactory = httpClientFactory;
         }
         public async Task<SearchWinner> GetSearchResultCount(string topic)
         {
             try
             {
                 if(string.IsNullOrEmpty(topic))
-                    throw new ArgumentException("Topic is invalid. Please select a valid topic", nameof(topic));
+                    throw new ArgumentNullException(nameof(topic), "Topic is invalid. Please select a valid topic");
 
                 string apiKey = _configuration.ApiKey;
                 string CONTEXT_ID = _configuration.ContextId;
                 string baseUrl = _configuration.BaseUrl;
 
-                var response = await _client.GetAsync(string.Format(baseUrl, apiKey, CONTEXT_ID, topic));
+                var client = _httpClientFactory.CreateClient();
+
+                var response = await client.GetAsync(string.Format(baseUrl, apiKey, CONTEXT_ID, topic));
 
                 var searchInformation = JsonConvert.DeserializeObject<GoogleResponse>(await response.Content.ReadAsStringAsync());
 
@@ -47,7 +49,7 @@ namespace Platform.SearchFight.Service.Engine
 
                 throw new ArgumentException("The current process has failed. No data encountered");
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;

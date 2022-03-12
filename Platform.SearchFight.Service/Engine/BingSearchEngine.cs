@@ -15,12 +15,12 @@ namespace Platform.SearchFight.Service.Engine
 {
     public class BingSearchEngine : ISearchEngine
     {
-        private readonly HttpClient _client;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly SearchBingConfig _configuration;
-        public BingSearchEngine(IOptions<SearchBingConfig> configuration)
+        public BingSearchEngine(IOptions<SearchBingConfig> configuration, IHttpClientFactory httpClientFactory)
         {
             _configuration = configuration.Value;
-            _client = new HttpClient();
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<SearchWinner> GetSearchResultCount(string topic)
@@ -28,15 +28,17 @@ namespace Platform.SearchFight.Service.Engine
             try
             {
                 if (string.IsNullOrEmpty(topic))
-                    throw new ArgumentException("Topic is invalid. Please select a valid topic", nameof(topic));
+                    throw new ArgumentNullException(nameof(topic), "Topic is invalid. Please select a valid topic");
 
-                _client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _configuration.ApiKey);
+                var client = _httpClientFactory.CreateClient();
+
+                client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", _configuration.ApiKey);
 
                 string baseUrl = _configuration.BaseUrl;
 
-                var response = await _client.GetAsync($"{baseUrl}{topic}&count=1");
+                var response = await client.GetAsync($"{baseUrl}{topic}&count=1");
 
-                var result = await response.Content.ReadAsStringAsync();
+                string result = await response.Content.ReadAsStringAsync();
 
                 var searchInformation = JsonConvert.DeserializeObject<BingResponse>(result);
 
@@ -52,7 +54,7 @@ namespace Platform.SearchFight.Service.Engine
 
                 throw new ArgumentException("The current process has failed. No data encountered");
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;

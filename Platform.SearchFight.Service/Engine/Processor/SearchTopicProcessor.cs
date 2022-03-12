@@ -9,22 +9,22 @@ namespace Platform.SearchFight.Service.Engine.Processor
 {
     public class SearchTopicProcessor : ISearchTopicProcessor
     {
-        private readonly ISearchEngine[] _searchEngines;
+        private readonly IEnumerable<ISearchEngine> _searchEngines;
 
-        public SearchTopicProcessor(ISearchEngine[] searchEngines)
+        public SearchTopicProcessor(IEnumerable<ISearchEngine> searchEngines)
         {
             _searchEngines = searchEngines;
         }
 
-        public async Task<List<SearchWinner>> Invoke(List<string> searchTopics,
-            IList<SearchWinner> searchResults)
+        public async Task<List<SearchWinner>> Invoke(List<string> searchTopics)
         {
+            var searchResults = new List<SearchWinner>();
+
             foreach (var searchEngine in _searchEngines)
             {
                 foreach (string topic in searchTopics)
                 {
                     var result = await searchEngine.GetSearchResultCount(topic);
-
                     searchResults?.Add(result);
                 }
             }

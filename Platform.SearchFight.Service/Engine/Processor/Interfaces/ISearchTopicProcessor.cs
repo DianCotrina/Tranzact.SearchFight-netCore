@@ -6,8 +6,7 @@ namespace Platform.SearchFight.Service.Engine.Processor.Interfaces
 {
     public interface ISearchTopicProcessor
     {
-        Task<List<SearchWinner>> Invoke(List<string> searchTopics,
-            IList<SearchWinner> searchResults);
+        Task<List<SearchWinner>> Invoke(List<string> searchTopics);
 
         string GetTopicWinner(IEnumerable<SearchWinner> searchWinners);
     }

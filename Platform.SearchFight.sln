@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.SearchFight", "Platform.SearchFight\Platform.SearchFight.csproj", "{283F398F-E154-4B7C-8207-68DA92C307D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Platform.SearchFight", "Platform.SearchFight\Platform.SearchFight.csproj", "{283F398F-E154-4B7C-8207-68DA92C307D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Platform.SearchFight.Service", "Platform.SearchFight.Service\Platform.SearchFight.Service.csproj", "{FE1A7D97-3F42-45FB-9221-6D9F5BACD38C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Platform.SearchFight.Tests", "Platform.SearchFight.Tests\Platform.SearchFight.Tests.csproj", "{4C13DC1D-EF5F-4E9D-939E-67A653ABAA2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FE1A7D97-3F42-45FB-9221-6D9F5BACD38C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE1A7D97-3F42-45FB-9221-6D9F5BACD38C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE1A7D97-3F42-45FB-9221-6D9F5BACD38C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C13DC1D-EF5F-4E9D-939E-67A653ABAA2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C13DC1D-EF5F-4E9D-939E-67A653ABAA2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C13DC1D-EF5F-4E9D-939E-67A653ABAA2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C13DC1D-EF5F-4E9D-939E-67A653ABAA2C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
